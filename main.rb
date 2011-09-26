@@ -92,7 +92,7 @@ module Pickup
         return unless @games.has_key?(m.channel.to_s)
 
         unless m.user.authed?
-          m.reply(m.user.nick + " n'est pas authentifié auprès de Q.")
+          m.reply("3" + m.user.nick + " n'est pas authentifié auprès de Q.")
           return
         end
 
@@ -102,7 +102,7 @@ module Pickup
           @games[m.channel.to_s].register_player(p, gclass)
           m.channel.topic=($topic_title_prefix + @games[m.channel.to_s].status)
         rescue
-          m.reply("@#{m.user.nick} : #{$!.to_s}")
+          m.reply("3" + "@#{m.user.nick} : #{$!.to_s}")
           puts $!.backtrace
         end
       end
@@ -198,7 +198,7 @@ module Pickup
       begin
         @games[m.channel.to_s].register_ready(Player.find_or_create_by_authname(m.user.authname))
       rescue
-        m.reply("@#{m.user.nick} : #{$!.to_s}")
+        m.reply("3" + "@#{m.user.nick} : #{$!.to_s}")
         puts $!.backtrace
       end
     end
@@ -226,9 +226,9 @@ module Pickup
 
       p = Player.find_or_create_by_authname(m.user.authname)
       if p.banned?
-        m.reply("@#{m.user.nick}: 7,1Vous êtes banni jusqu'au #{p.banned_until.to_s}#{p.ban_reason.nil? ? "" : " :#{p.ban_reason}"}")
+        m.reply("3" + "@#{m.user.nick}: Vous êtes banni jusqu'au #{p.banned_until.to_s}#{p.ban_reason.nil? ? "" : " :#{p.ban_reason}"}")
       else
-        m.reply("@#{m.user.nick}: 7,1Vous n'êtes pas banni")
+        m.reply("3" + "@#{m.user.nick}: Vous n'êtes pas banni")
       end
     end
 
@@ -237,7 +237,7 @@ module Pickup
 
       msg = ""
       Mumble.all.each do |mu|
-        msg += "7,1Serveur mumble #{mu.hostname}:#{mu.port.to_s} (mot de passe : #{mu.password})\n"
+        msg += "3" + "Serveur mumble #{mu.hostname}:#{mu.port.to_s} (mot de passe : #{mu.password})\n"
       end
       m.reply(msg)
     end
@@ -252,9 +252,9 @@ module Pickup
 
       begin
         name = @games[m.channel.to_s].register_vote(p, map)
-        m.reply("@#{m.user.nick} : 7,1Vote enregistré (#{name})")
+        m.reply("3" + "@#{m.user.nick} : Vote enregistré (#{name})")
       rescue
-        m.reply("@#{m.user.nick} : 7,1#{$!.to_s}")
+        m.reply("3" + "@#{m.user.nick} : #{$!.to_s}")
         puts $!.backtrace
       end
     end
@@ -271,9 +271,9 @@ module Pickup
         if s.active?
           msg += "#{s.ip_address}:#{s.port} "
           if s.available?
-            msg += "7,1(#{s.number_of_players} joueurs en ce moment)\n"
+            msg += "3" + "(#{s.number_of_players} joueurs en ce moment)\n"
           else
-            msg += "7,1(indisponible)\n"
+            msg += "3" + "(indisponible)\n"
           end
         end
       end
@@ -284,13 +284,13 @@ module Pickup
     on :message, /^!last$/ do |m|
       return unless @games.has_key?(m.channel.to_s) and m.user.authed?
 
-      m.reply("7,1Dernier pickup : " + @games[m.channel.to_s].channel.games.last.to_s)
+      m.reply("3" + "Dernier pickup : " + @games[m.channel.to_s].channel.games.last.to_s)
     end
 
     on :message, /^!last -v$/ do |m|
       return unless @games.has_key?(m.channel.to_s) and m.user.authed?
 
-      m.user.send("7,1Dernier pickup : " + @games[m.channel.to_s].channel.games.last.to_s_verbose)
+      m.user.send("3" + "Dernier pickup : " + @games[m.channel.to_s].channel.games.last.to_s_verbose)
     end
 
     on :message, /^!mylast$/ do |m|
@@ -299,7 +299,7 @@ module Pickup
       p = Player.find_or_create_by_authname(m.user.authname)
 
       if p.games.any?
-        m.reply("7,1Dernier pickup : " + p.games.last.to_s)
+        m.reply("3" + "Dernier pickup : " + p.games.last.to_s)
       end
     end
 
@@ -309,7 +309,7 @@ module Pickup
       p = Player.find_or_create_by_authname(m.user.authname)
 
       if p.games.any?
-        m.user.send("7,1Dernier pickup : " + p.games.last.to_s_verbose)
+        m.user.send("3" + "Dernier pickup : " + p.games.last.to_s_verbose)
       end
     end
 
@@ -318,7 +318,7 @@ module Pickup
 
       game = Game.find(id.to_i)
       if game.nil?
-        m.reply("@#{m.user.nick}: 7,1Ce pickup n'existe pas.")
+        m.reply("3" + "@#{m.user.nick}: Ce pickup n'existe pas.")
       else
         m.reply(game.to_s)
       end
@@ -366,7 +366,7 @@ module Pickup
       p = Player.find_or_create_by_authname(m.user.authname)
 
       unless p.admin?
-        m.reply("7,1Cette commande est reservé aux administrateurs.")
+        m.reply("3" + "Cette commande est reservé aux administrateurs.")
         return
       end
 
@@ -374,14 +374,14 @@ module Pickup
       parsedargs = re.match(args)
 
       if parsedargs.nil?
-        m.reply("7,1Format de command invalide (!ban <nick> <nb jours> <raison>)")
+        m.reply("3" + "Format de command invalide (!ban <nick> <nb jours> <raison>)")
         return
       end
 
       user = User(parsedargs[1])
 
       if user.nil? or not user.authed?
-        m.reply("13,1@#{m.user.nick}: 7,1Aucun utilisateur authentifié au pseudo #{parsedargs[1]}.")
+        m.reply("3" + "@#{m.user.nick}: Aucun utilisateur authentifié au pseudo #{parsedargs[1]}.")
       else
         banned_p = Player.find_or_create_by_authname(user.authname)
         banned_p.ban(parsedargs[2].to_i, parsedargs[3])
@@ -399,7 +399,7 @@ module Pickup
       p = Player.find_or_create_by_authname(m.user.authname)
 
       if not p.admin?
-        m.reply("7,1Cette commande est reservé aux administrateurs.")
+        m.reply("3" + "Cette commande est reservé aux administrateurs.")
         return
       end
 
@@ -412,7 +412,7 @@ module Pickup
       p = Player.find_or_create_by_authname(m.user.authname)
 
       if not p.admin?
-        m.reply("7,1Cette commande est reservé aux administrateurs.")
+        m.reply("3" + "Cette commande est reservé aux administrateurs.")
         return
       end
 
@@ -433,7 +433,7 @@ module Pickup
 
       if p.admin?
         if User(nick).nil? or not User(nick).authed?
-          m.reply("13,1@#{m.user.nick}: 7,1Aucun utilisateur au pseudo #{nick}.")
+          m.reply("3" + "@#{m.user.nick}: Aucun utilisateur au pseudo #{nick}.")
         else
           banned_p = Player.find_or_create_by_authname(User(nick).authname)
           banned_p.unban

@@ -32,11 +32,11 @@ module Pickup
     attr_accessor :ready
 
     def to_s
-      "7,1#{nick} (#{player.authname}) :: Équipe #{ team == 1 ? "rouge" : "bleue" } :: #{$classes[gclass]}#{ map_vote.nil? ? "" : "a voté pour #{map_vote.name}" }"
+      "3" + "#{nick} (#{player.authname}) :: Équipe #{ team == 1 ? "rouge" : "bleue" } :: #{$classes[gclass]}#{ map_vote.nil? ? "" : "a voté pour #{map_vote.name}" }"
     end
 
     def to_s_verbose
-      "7,1dans l'équipe #{ team == 1 ? "rouge" : "bleue" } en tant que #{ $classes[gclass] } sur le serveur #{game.server.to_s_pw}"
+      "3" + "dans l'équipe #{ team == 1 ? "rouge" : "bleue" } en tant que #{ $classes[gclass] } sur le serveur #{game.server.to_s_pw}"
     end
   end
 

@@ -102,7 +102,7 @@ module Pickup
     end
 
     def to_s_verbose
-      "7,1#{ip_address}:#{port} (#{s.available? ? "#{s.number_of_players} joueurs en ce moment" : "indisponible" })"
+      "3" + "#{ip_address}:#{port} (#{s.available? ? "#{s.number_of_players} joueurs en ce moment" : "indisponible" })"
     end
 
   end

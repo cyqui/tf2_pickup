@@ -59,14 +59,14 @@ module Pickup
     end
 
     def register_player(player, gclass)
-      raise "7,1Cette classe est désactivée." unless @registration.has_key?(gclass)
-      raise "7,1Merci de lire les conditions d'utilisation #{$terms_of_use_url} et tapez !accept" unless player.has_accepted_terms_of_use != 0
-      raise "7,1Désolé, aucune place disponible en #{gclass}" unless @registration[gclass] < @limits[gclass]
-      raise "7,1Désolé, vous avez été banni" if player.banned?
+      raise "3" + "Cette classe est désactivée." unless @registration.has_key?(gclass)
+      raise "3" + "Merci de lire les conditions d'utilisation #{$terms_of_use_url} et tapez !accept" unless player.has_accepted_terms_of_use != 0
+      raise "3" + "Désolé, aucune place disponible en #{gclass}" unless @registration[gclass] < @limits[gclass]
+      raise "3" + "Désolé, vous avez été banni" if player.banned?
 
       # Raise error if player is in the left list and try to rejoin before 60 sec.
       if @left_players.has_key?(player) and @left_players[player] > (Time.now.to_i - 60)
-        raise "7,1Vous pourrez vous réinscrire dans #{60 - (Time.now.to_i - @left_players[player])} secondes"
+        raise "3" + "Vous pourrez vous réinscrire dans #{60 - (Time.now.to_i - @left_players[player])} secondes"
       end
 
       if @registered_players.has_key?(player)
@@ -116,15 +116,15 @@ module Pickup
               return name
             end
         end
-        raise "7,1Aucune map trouvé pour '#{map}'."
+        raise "3" + "Aucune map trouvé pour '#{map}'."
       end
     end
 
     def register_ready(player)
       if not filled?
-        raise "7,1Les inscriptions sont encore ouvertes"
+        raise "3" + "Les inscriptions sont encore ouvertes"
       elsif server.nil?
-        raise "7,1En cours de recherche d'un serveur"
+        raise "3" + "En cours de recherche d'un serveur"
       end
 
       if @registered_players.has_key?(player) and not @registered_players[player].ready
@@ -209,8 +209,8 @@ module Pickup
       red_team = []
 
       competes.each do |c|
-        c.player.user.send("7,1Vous êtes #{c.to_s_verbose}")
-        c.player.user.send("connect #{server.ip_address}:#{server.port.to_s}; password #{server.password}")
+        c.player.user.send("3" + "Vous êtes #{c.to_s_verbose}")
+        c.player.user.send("3" + "connect #{server.ip_address}:#{server.port.to_s}; password #{server.password}")
         if c.team == @@BLUE
             blue_team.push(c)
         else
@@ -218,16 +218,16 @@ module Pickup
         end
       end
 
-      msg = "Lancement du pickup sur le serveur no " + self.server.id.to_s + " et la map " + self.map.name + "\n"
-      msg += "Équipe bleue :: "
+      msg = "3" + "Lancement du pickup sur le serveur no " + self.server.id.to_s + " et la map " + self.map.name + "\n"
+      msg += "12" + "Équipe bleue :: "
 
       blue_team.each do |c|
         msg += c.nick + ", "
       end
-      msg = msg.chop.chop + "\nÉquipe rouge :: "
+      msg = msg.chop.chop + "4" + "\nÉquipe rouge :: "
 
       red_team.each do |c|
-        msg += c.nick + ", "
+        msg += "3" + c.nick + ", "
       end
       msg = msg.chop.chop
       chan.send(msg)
@@ -250,8 +250,8 @@ module Pickup
           end
 
           if not status_changed and server.nil?
-            chan.send("7,1Aucun serveur disponible, en attente ...")
-            chan.topic="7,1" + ($topic_title_prefix + status + " (en attente d'un serveur)")
+            chan.send("3" + "Aucun serveur disponible, en attente ...")
+            chan.topic="3" + ($topic_title_prefix + status + " (en attente d'un serveur)")
             status_changed = true
           end
 
@@ -261,8 +261,8 @@ module Pickup
         server.lock
 
         if status_changed
-          chan.send("7,1Un serveur a été trouvé.")
-          chan.topic="7,1" +($topic_title_prefix + status)
+          chan.send("3" + "Un serveur a été trouvé.")
+          chan.topic="3" +($topic_title_prefix + status)
         end
 
         chan.send(not_yet_ready_list)
@@ -282,7 +282,7 @@ module Pickup
           end
         end
         server.unlock
-        chan.topic="7,1" + ($topic_title_prefix + status)
+        chan.topic="3" + ($topic_title_prefix + status)
       rescue
         puts $!.to_s
         server.unlock
@@ -290,7 +290,7 @@ module Pickup
     end
 
     def status
-      status = "13,1" + "#{game_variant.name} :: 7,1"
+      status = "3" + "#{game_variant.name} :: "
       @registration.each do |gclass, n|
         status += "#{gclass} #{n}/#{@limits[gclass]} "
         players = []
@@ -311,7 +311,7 @@ module Pickup
     end
 
     def not_yet_ready_list
-      list = "Les joueurs suivant doivent taper !ready : "
+      list = "Les joueurs suivant doivent taper !ready : 6"
       @registered_players.each do |player, compete|
         unless compete.ready
             list += compete.nick + ", "
@@ -351,13 +351,13 @@ module Pickup
     end
 
     def to_s
-      "7,1Pickup no #{id.to_s} lancé le #{date.to_datetime.to_s} sur le serveur #{server.ip_address}:#{server.port.to_s}"
+      "3" + "Pickup no #{id.to_s} lancé le #{date.to_datetime.to_s} sur le serveur #{server.ip_address}:#{server.port.to_s}"
     end
 
     def to_s_verbose
       msg = to_s
       competes.each do |c|
-        msg += "\n#{c.to_s}"
+        msg += "3" + "\n#{c.to_s}"
       end
       msg
     end

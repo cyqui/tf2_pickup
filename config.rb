@@ -31,12 +31,12 @@ $irc_authentication_command = ''
 # MySQL settings.
 $db_host = 'localhost'
 $db_user = 'pickupbot'
-$db_pass = 'jfSgot9q'
+$db_pass = 'iea19a8manr'
 $db_name = 'pickupbot'
 
 $ready_timeout = 60
 
-$terms_of_use_url = "http://www.tf2connexion.fr/help/index/page/content/r%C3%A8glementpickup"
+$terms_of_use_url = "http://www.tf2connexion.fr/forum/index.php?topic=816.0"
 
 $classes = ["demoman", "engineer", "heavy", "medic", "pyro", "scout", "sniper", "soldier", "spy"]
 
